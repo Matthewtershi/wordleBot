@@ -1,0 +1,18 @@
+{
+    "name": "Wordle Bot",
+    "version": "1.0.0",
+    "description": "This is an extension to help you through the daily word when you need!",
+    "manifest_version": 3,
+    "author": "Matthew Shi",
+    "action": {
+        "default_popup": "index.html",
+        "default_title": "Wordle Bot"
+    },
+    "icons": {
+        "16": "images/icon-16.png",
+        "32": "images/icon-32.png",
+        "48": "images/icon-48.png",
+        "128": "images/icon-128.png"
+    }
+    
+}

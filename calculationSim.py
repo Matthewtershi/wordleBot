@@ -45,8 +45,6 @@ def findNextGuess(word_list):
                     if (len(bestEntries) > 5):
                         bestEntries.pop(-1)
                     maxEntropy = bestEntries[-1][1]
-            
-                
             # print(str(i)+" "+word+" "+str(entropy)+" "+str(wordFreq))
             entropy = 0
         bestEntries.sort(key=lambda x:x[2], reverse = True)
