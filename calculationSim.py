@@ -1,6 +1,8 @@
 import nltk
 import math
 import itertools
+# import pandas as pd
+import numpy as np
 
 from wordfreq import word_frequency
 from wordNav import returnList
@@ -45,11 +47,10 @@ def findNextGuess(word_list):
                     if (len(bestEntries) > 5):
                         bestEntries.pop(-1)
                     maxEntropy = bestEntries[-1][1]
-            
-                
             # print(str(i)+" "+word+" "+str(entropy)+" "+str(wordFreq))
             entropy = 0
         bestEntries.sort(key=lambda x:x[2], reverse = True)
+        print(len(bestEntries))
         print("Your best choices are:\n" + '\n'.join(map(str, bestEntries)))
         print("------------------")
 

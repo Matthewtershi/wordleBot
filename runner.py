@@ -16,7 +16,6 @@ five_letter_words = [word for word in word_list if len(word) == 5 and d.check(wo
 five_letter_words = list(map(str.lower, five_letter_words))
 five_letter_words_count = len(five_letter_words)
 targetWord = random.choice(five_letter_words).lower()
-targetWord = "basin"
 
 print("Welcome to Wordle!")
 print("------------------")
