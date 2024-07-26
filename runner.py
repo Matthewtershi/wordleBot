@@ -44,6 +44,7 @@ while True:
         feedback = evaluate_guess(guess, targetWord)
         print(f"Feedback: {' '.join(feedback)}")
         matching_words = returnList(guess, five_letter_words, feedback[0], feedback[1], feedback[2], feedback[3], feedback[4])
+        print("matching_words length: " + str(len(matching_words))) 
         findNextGuess(matching_words)
     guessedWords[attempts-1] = guess
     # print(targetWord)

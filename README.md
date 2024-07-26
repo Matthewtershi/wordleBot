@@ -16,7 +16,9 @@ Calculate the entropy of each combination of what the wordle might respond with.
 Tools:
 1. Pyodide
 2. NLTK
+3. Pandas
 Packages:
 1. pip install nltk
-3. pip install enchant
-5. pip install wordfreq
+2. pip install enchant
+3. pip install wordfreq
+4. pip install pandas
