@@ -10,12 +10,12 @@ nltk.download('words')
 d = enchant.Dict("en_US")
 
 attempts = 0
-guessedWords = [0] * 5
+guessedWords = []
 word_list = words.words()
 five_letter_words = [word for word in word_list if len(word) == 5 and d.check(word)]
 five_letter_words = list(map(str.lower, five_letter_words))
-five_letter_words_count = len(five_letter_words)
 targetWord = random.choice(five_letter_words).lower()
+targetWord = "urial"
 
 print("Welcome to Wordle!")
 print("------------------")
@@ -44,7 +44,7 @@ while True:
         print(f"Feedback: {' '.join(feedback)}")
         matching_words = returnList(guess, five_letter_words, feedback[0], feedback[1], feedback[2], feedback[3], feedback[4])
         findNextGuess(matching_words)
-    guessedWords[attempts-1] = guess
+    guessedWords.append(guess)
     # print(targetWord)
 print("------------------")
 print("You solved this Wordle in " + str(attempts) + " tries!")
