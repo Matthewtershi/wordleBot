@@ -21,10 +21,9 @@ def findNextGuess(word_list):
     bestEntries = []
 
     if (len(word_list) == 1):
-        print("Your best choice is: " + word_list[0] + " because there is only one option!")
-        return (word_list[0], float(1), float(getWordFrequency(word_list[0])))
+        # print("Your best choice is: " + word_list[0] + " because there is only one option!")
+        return [(word_list[0], float(1), float(getWordFrequency(word_list[0])))]
     else:
-        print("------------------")
         for i, word in enumerate(word_list):
             word = word.lower()
             for combination in combinations:
@@ -50,8 +49,8 @@ def findNextGuess(word_list):
             # print(str(i)+" "+word+" "+str(entropy)+" "+str(wordFreq))
             entropy = 0
         bestEntries.sort(key=lambda x:x[2], reverse = True)
-        print("Your best choices are:\n" + '\n'.join(map(str, bestEntries)))
-        print("------------------")
+        # print("Your best choices are:\n" + '\n'.join(map(str, bestEntries)))
+        # print("------------------")
         return bestEntries
 
 def getWordFrequency(word):
