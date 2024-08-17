@@ -15,7 +15,7 @@ word_list = words.words()
 five_letter_words = [word for word in word_list if len(word) == 5 and d.check(word)]
 five_letter_words = list(map(str.lower, five_letter_words))
 targetWord = random.choice(five_letter_words).lower()
-targetWord = "urial"
+targetWord = "flame"
 
 print("Welcome to Wordle!")
 print("------------------")
@@ -43,6 +43,7 @@ while True:
         feedback = evaluate_guess(guess, targetWord)
         print(f"Feedback: {' '.join(feedback)}")
         matching_words = returnList(guess, five_letter_words, feedback[0], feedback[1], feedback[2], feedback[3], feedback[4])
+        matching_words = [word for word in matching_words if word not in guessedWords]
         findNextGuess(matching_words)
     guessedWords.append(guess)
     # print(targetWord)
