@@ -50,7 +50,7 @@ def findNextGuess(word_list):
             entropy = 0
         bestEntries.sort(key=lambda x:x[2], reverse = True)
         # print("Your best choices are:\n" + '\n'.join(map(str, bestEntries)))
-        # print("------------------")
+        print("------------------")
         return bestEntries
 
 def getWordFrequency(word):

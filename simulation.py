@@ -17,7 +17,6 @@ def simRound():
     five_letter_words = [word for word in word_list if len(word) == 5 and d.check(word)]
     five_letter_words = list(map(str.lower, five_letter_words))
     targetWord = random.choice(five_letter_words).lower()
-    targetWord = "flame"  # For testing
     gameState = True
     previousGuesses = []
     matching_words = five_letter_words  # Initialize matching_words
@@ -46,6 +45,7 @@ def simRound():
             feedback = evaluate_guess(guess, targetWord)
             matching_words = returnList(guess, five_letter_words, feedback[0], feedback[1], feedback[2], feedback[3], feedback[4])
             matching_words = [word for word in matching_words if word not in previousGuesses]
+            findNextGuess(matching_words)
 
     return None, attempts  # Return None if the loop exits without guessing correctly
 
