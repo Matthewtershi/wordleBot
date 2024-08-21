@@ -1,3 +1,4 @@
+import asyncio
 import pandas as pd
 import numpy as np
 import nltk
@@ -10,7 +11,7 @@ from calculationSim import *
 
 nltk.download('words')
 
-def simRound():
+async def simRound():
     d = enchant.Dict("en_US")
     attempts = 0
     word_list = words.words()
@@ -49,20 +50,25 @@ def simRound():
 
     return None, attempts  # Return None if the loop exits without guessing correctly
 
-# sum = 0
-# print("Start Sim")
-# while True:
-#     userinput = input("Enter rounds: ")
-#     try:
-#         rounds = int(userinput)
-#         break
-#     except ValueError:
-#         print("That's not a valid number. Please try again.")
-# for i in range(rounds):
-#     guess, attempts = simRound()
-#     if guess is not None:
-#         print(f"You got {guess} in {attempts} tries!")
-#     else:
-#         print(f"Failed to guess the word within {attempts} tries.")
-#     sum += attempts
-# print("avg: " + str(float(sum)/rounds))
+async def main():
+    
+    sum = 0
+    print("Start Sim")
+    while True:
+        userinput = input("Enter rounds: ")
+        try:
+            rounds = int(userinput)
+            break
+        except ValueError:
+            print("That's not a valid number. Please try again.")
+    for i in range(rounds):
+        guess, attempts = await simRound()
+        if guess is not None:
+            print(f"You got {guess} in {attempts} tries!")
+        else:
+            print(f"Failed to guess the word within {attempts} tries.")
+        sum += attempts
+    print("avg: " + str(float(sum)/rounds))
+
+# asyncio.run(main())
+

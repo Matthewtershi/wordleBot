@@ -6,10 +6,6 @@ from wordfreq import word_frequency
 from wordNav import returnList
 
 nltk.download('words', quiet=True)
-# api_key = "TLA3W3-AH63PKG75L"
-# wolfram_api_call = WolframAPICall(api_key)
-# session = WolframLanguageSession(api_key)
-# client = wolframalpha.Client("TLA3W3-AH63PKG75L")
 
 def findNextGuess(word_list):
     values = ['0', 'Y', 'G']
@@ -50,7 +46,7 @@ def findNextGuess(word_list):
             entropy = 0
         bestEntries.sort(key=lambda x:x[2], reverse = True)
         # print("Your best choices are:\n" + '\n'.join(map(str, bestEntries)))
-        print("------------------")
+        print("<------------------>")
         return bestEntries
 
 def getWordFrequency(word):

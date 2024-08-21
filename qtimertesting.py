@@ -45,7 +45,7 @@ class LiveBarChart(QMainWindow):
         self.timer.start(500)  # Update every 500 milliseconds
 
     def generate_random_number(self):
-        # Generate a random number between 1 and 6
+        self.timer.start(1000)
         return random.randint(1, 6)
 
     def update_chart(self):

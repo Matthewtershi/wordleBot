@@ -1,82 +1,95 @@
 import sys
-import numpy as np
-import threading
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QLineEdit, QLabel
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+import seaborn as sns
 import matplotlib.pyplot as plt
+from PyQt5.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QWidget, QTextEdit
+from PyQt5.QtCore import QTimer
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from simulation import simRound
 
-class MainWindow(QMainWindow):
+class LiveBarChart(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Wordle Bot Simulation")
+        # Initialize the frequencies for numbers 1-6
+        self.frequencies = [0] * 7  # Including the ">6" category
+
+        # Set up the main window
+        self.setWindowTitle("Bot Simulation")
         self.setGeometry(100, 100, 800, 600)
 
-        self.central_widget = QWidget()
-        self.setCentralWidget(self.central_widget)
-        self.layout = QVBoxLayout(self.central_widget)
+        # Create a QWidget and set it as the central widget
+        self.main_widget = QWidget(self)
+        self.setCentralWidget(self.main_widget)
 
+        # Create a QVBoxLayout for the central widget
+        layout = QVBoxLayout(self.main_widget)
+
+        # Set Seaborn style for the plots
+        sns.set(style="whitegrid")
+
+        # Create the matplotlib figure and bar chart
         self.figure, self.ax = plt.subplots()
         self.canvas = FigureCanvas(self.figure)
-        self.layout.addWidget(self.canvas)
+        layout.addWidget(self.canvas)
 
-        self.input_label = QLabel("Enter a number of rounds to feed the simulation:")
-        self.layout.addWidget(self.input_label)
+        self.bars = self.ax.bar(range(1, 8), self.frequencies, color=sns.color_palette("deep", 7))
+        self.ax.set_xlabel("Number of Attempts")
+        self.ax.set_ylabel("Frequency")
+        self.ax.set_title("Live Update of Attempt Frequencies")
 
-        self.input_field = QLineEdit()
-        self.layout.addWidget(self.input_field)
+        # Set Y-axis to only show integer ticks
+        self.ax.yaxis.get_major_locator().set_params(integer=True)
 
-        self.update_button = QPushButton("Update Chart")
-        self.update_button.clicked.connect(self.start_simulation)
-        self.layout.addWidget(self.update_button)
+        # Add a QTextEdit widget to display guesses
+        self.guess_display = QTextEdit(self)
+        self.guess_display.setReadOnly(True)
+        layout.addWidget(self.guess_display)
 
-        self.error_label = QLabel("")
-        self.error_label.setStyleSheet("color: red;")
-        self.layout.addWidget(self.error_label)
+        # Set up the timer for updating the chart
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_chart)
+        self.timer.start(1000)  # Adjust as necessary
 
-        self.x = ['1', '2', '3', '4', '5', '6', ">6"]
-        self.y = np.zeros(len(self.x))
-        self.bars = self.ax.bar(self.x, self.y, color='blue')
+        self.round_count = 0
+        self.total_rounds = 4
 
-        self.ax.set_xlabel('Attempts')
-        self.ax.set_ylabel('Values')
-        self.ax.set_title('Dynamic Bar Chart')
-
-    def retrieveData(self):
-        try:
-            return int(self.input_field.text())
-        except ValueError:
-            self.error_label.setText("Invalid input")
-            return 0
-
-    def start_simulation(self):
-        number_of_rounds = self.retrieveData()
-        if number_of_rounds > 0:
-            threading.Thread(target=self.run_simulation, args=(number_of_rounds,)).start()
-
-    def run_simulation(self, number_of_rounds):
-        for i in range(number_of_rounds):
-            try:
-                guess, attempts = simRound()
-                attempts = 7 if attempts > 6 else attempts
-                self.y[attempts - 1] += 1
-
-                self.update_chart()
-                print(f"round {i + 1} ran")
-            except Exception as e:
-                self.error_label.setText(f"Error during simRound: {e}")
-                break
+    async def run_round(self):
+        # Run a single round and return the guess and attempts
+        guess, attempts = await simRound()
+        return guess, attempts
 
     def update_chart(self):
-        for i, bar in enumerate(self.bars):
-            bar.set_height(self.y[i])
+        print(f"Update chart called. Round count: {self.round_count}")
 
-        self.ax.set_ylim(0, max(self.y) + 10)
+        # Run the simulation until the total rounds are completed
+        if self.round_count >= self.total_rounds:
+            self.guess_display.append(f"{self.total_rounds} rounds ran. Program Finished")
+            self.timer.stop()  # Stop the timer when all rounds are completed
+            return
+
+        # Run a single round
+        guess, attempts = self.run_round()
+        self.round_count += 1
+
+        # Display the guesses
+        self.guess_display.append(f"Round {self.round_count}: {', '.join(guess)}")
+
+        # Update the frequencies
+        if attempts > 6:
+            self.frequencies[-1] += 1
+        else:
+            self.frequencies[attempts - 1] += 1
+
+        # Update the heights of the bars in the chart
+        for bar, freq in zip(self.bars, self.frequencies):
+            bar.set_height(freq)
+
+        # Adjust Y-axis to better fit the data
+        self.ax.set_ylim(0, max(self.frequencies) + 5)
         self.canvas.draw()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = MainWindow()
+    window = LiveBarChart()
     window.show()
     sys.exit(app.exec_())
