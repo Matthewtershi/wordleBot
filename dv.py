@@ -1,33 +1,33 @@
 import sys
 import seaborn as sns
 import matplotlib.pyplot as plt
+import threading
+import asyncio
 from PyQt5.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QWidget, QTextEdit
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QTimer, pyqtSignal, pyqtSlot
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.ticker import FuncFormatter
+
 from simulation import simRound
 
 class LiveBarChart(QMainWindow):
+    # Define a signal to communicate the results between threads
+    result_ready = pyqtSignal(str, int)
+
     def __init__(self):
         super().__init__()
 
-        # Initialize the frequencies for numbers 1-6
-        self.frequencies = [0] * 7  # Including the ">6" category
-
-        # Set up the main window
+        self.frequencies = [0] * 7 
         self.setWindowTitle("Bot Simulation")
         self.setGeometry(100, 100, 800, 600)
 
         # Create a QWidget and set it as the central widget
         self.main_widget = QWidget(self)
         self.setCentralWidget(self.main_widget)
-
-        # Create a QVBoxLayout for the central widget
         layout = QVBoxLayout(self.main_widget)
 
-        # Set Seaborn style for the plots
         sns.set(style="whitegrid")
 
-        # Create the matplotlib figure and bar chart
         self.figure, self.ax = plt.subplots()
         self.canvas = FigureCanvas(self.figure)
         layout.addWidget(self.canvas)
@@ -37,41 +37,44 @@ class LiveBarChart(QMainWindow):
         self.ax.set_ylabel("Frequency")
         self.ax.set_title("Live Update of Attempt Frequencies")
 
-        # Set Y-axis to only show integer ticks
         self.ax.yaxis.get_major_locator().set_params(integer=True)
 
-        # Add a QTextEdit widget to display guesses
+        self.ax.xaxis.set_major_formatter(FuncFormatter(lambda x, _: '>6' if x == self.frequencies[-1] else str(int(x))))
+
         self.guess_display = QTextEdit(self)
         self.guess_display.setReadOnly(True)
         layout.addWidget(self.guess_display)
 
-        # Set up the timer for updating the chart
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_chart)
-        self.timer.start(1000)  # Adjust as necessary
-
+        self.timer.start(500) 
         self.round_count = 0
         self.total_rounds = 4
 
-    async def run_round(self):
-        # Run a single round and return the guess and attempts
-        guess, attempts = await simRound()
-        return guess, attempts
+        self.result_ready.connect(self.process_results)
+
+    def run_round(self):
+        return asyncio.run(simRound())
 
     def update_chart(self):
-        print(f"Update chart called. Round count: {self.round_count}")
+        # print(f"Update chart called. Round count: {self.round_count}")
 
-        # Run the simulation until the total rounds are completed
         if self.round_count >= self.total_rounds:
             self.guess_display.append(f"{self.total_rounds} rounds ran. Program Finished")
-            self.timer.stop()  # Stop the timer when all rounds are completed
+            self.timer.stop()
             return
 
-        # Run a single round
-        guess, attempts = self.run_round()
+        threading.Thread(target=self.handle_round).start()
+
+    def handle_round(self):
+        final_word, attempts = self.run_round()
+        self.result_ready.emit(final_word, attempts)
+
+    @pyqtSlot(str, int)
+    def process_results(self, guess, attempts):
         self.round_count += 1
 
-        # Display the guesses
+        # Update the UI in the main thread
         self.guess_display.append(f"Round {self.round_count}: {', '.join(guess)}")
 
         # Update the frequencies
@@ -87,6 +90,25 @@ class LiveBarChart(QMainWindow):
         # Adjust Y-axis to better fit the data
         self.ax.set_ylim(0, max(self.frequencies) + 5)
         self.canvas.draw()
+
+        if (self.round_count >= self.total_rounds):
+            self.guess_display.append("Stopping program")
+            self.timer.stop()
+
+    def closeEvent(self, event):
+        """handle closing program"""
+
+        print("Closing application")
+
+        if (self.timer.isActive):
+            self.timer.stop()
+
+        if self.thread.isRunning():
+            self.thread.quit()
+            self.thread.wait()
+
+        QApplication.quit()
+        event.accept()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

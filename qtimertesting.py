@@ -1,6 +1,7 @@
 import sys
 import random
 import matplotlib.pyplot as plt
+import asyncio
 from PyQt5.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QWidget
 from PyQt5.QtCore import QTimer
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas

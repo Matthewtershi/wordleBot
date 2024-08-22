@@ -18,6 +18,7 @@ async def simRound():
     five_letter_words = [word for word in word_list if len(word) == 5 and d.check(word)]
     five_letter_words = list(map(str.lower, five_letter_words))
     targetWord = random.choice(five_letter_words).lower()
+    targetWord = "inure"
     gameState = True
     previousGuesses = []
     matching_words = five_letter_words  # Initialize matching_words
