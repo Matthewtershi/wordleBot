@@ -1,6 +1,4 @@
 import asyncio
-import pandas as pd
-import numpy as np
 import nltk
 import random
 import enchant
@@ -18,7 +16,6 @@ async def simRound():
     five_letter_words = [word for word in word_list if len(word) == 5 and d.check(word)]
     five_letter_words = list(map(str.lower, five_letter_words))
     targetWord = random.choice(five_letter_words).lower()
-    targetWord = "inure"
     gameState = True
     previousGuesses = []
     matching_words = five_letter_words  # Initialize matching_words
@@ -28,6 +25,8 @@ async def simRound():
 
         if attempts == 1:
             guess = "raise"
+        elif attempts > 6:
+            return targetWord, attempts
         else:
             guess = next((word for word, _, _ in findNextGuess(matching_words) if word not in previousGuesses), None)
             if guess is None:
@@ -71,5 +70,5 @@ async def main():
         sum += attempts
     print("avg: " + str(float(sum)/rounds))
 
-# asyncio.run(main())
+asyncio.run(main())
 

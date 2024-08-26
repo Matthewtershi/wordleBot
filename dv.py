@@ -39,7 +39,8 @@ class LiveBarChart(QMainWindow):
 
         self.ax.yaxis.get_major_locator().set_params(integer=True)
 
-        self.ax.xaxis.set_major_formatter(FuncFormatter(lambda x, _: '>6' if x == self.frequencies[-1] else str(int(x))))
+        self.ax.set_xticks(range(1, 8))
+        self.ax.set_xticklabels(['1', '2', '3', '4', '5', '6', '> 6'])
 
         self.guess_display = QTextEdit(self)
         self.guess_display.setReadOnly(True)
@@ -48,6 +49,7 @@ class LiveBarChart(QMainWindow):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_chart)
         self.timer.start(500) 
+        
         self.round_count = 0
         self.total_rounds = 4
 
@@ -103,9 +105,9 @@ class LiveBarChart(QMainWindow):
         if (self.timer.isActive):
             self.timer.stop()
 
-        if self.thread.isRunning():
-            self.thread.quit()
-            self.thread.wait()
+        for thread in threading.enumerate():
+            if thread is not threading.main_thread():
+                thread.join(timeout=1)
 
         QApplication.quit()
         event.accept()
