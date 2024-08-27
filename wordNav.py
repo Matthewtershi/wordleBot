@@ -17,12 +17,6 @@ def returnList(word, word_list, c0, c1, c2, c3, c4):
     
 
     filtered_words = [w for w in word_list if matches_criteria(w)]
-    # print("basin matches: "+ str(matches_criteria("basis")))
-    # print("evaluate answer: " + ' '.join(x for x in evaluate_guess("basin", "basis"))) 
-    # there is only one GGGG0 so when you look beyond that my code doesnt detect GGGGY and GGGGG
-
-    # the current problem is that my eval answer is only looking for exactly 0 or Y not both
-    #print([element for element in word_list if element.startswith("basi")])
 
     return filtered_words
 

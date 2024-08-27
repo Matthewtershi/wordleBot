@@ -30,13 +30,13 @@ Parallel Processing: Multithreading techniques will be employed to optimize the 
 UI/UX Enhancements: While the current version employs a simple UI, future iterations could incorporate advanced visualization tools like Qt Designer and hvPlot for a more user-friendly experience.
 
 ## Reflection
-After running a simulation my program averaged a score of __. Some improvements that could be made could include a feature that would prioritize entropy in the first few guesses of the game and prioritize popularity of the word items only in the latter half instead of ranking on an average of both entropy and usability rate. This project ultimately gave me insight into data visualization with python and introduced me to a different application of computing than what I'm typically used to. Although this type of project is heavily math based, utilizing math to not only calculate, but to deduce was a different but noteworthy experience.
+After running a simulation my program averaged a score of 4.12. Some improvements that could be made could include a feature that would prioritize entropy in the first few guesses of the game and prioritize popularity of the word items only in the latter half instead of ranking on an average of both entropy and usability rate. This project ultimately gave me insight into data visualization with python and introduced me to a different application of computing than what I'm typically used to. Although this type of project is heavily math based, utilizing math to not only calculate, but to deduce was a different but noteworthy experience.
 
 ## Tools and Libraries
-NLTK: Natural language processing library used for linguistic analysis and dictionary compilation.
-Asyncio: Multithreading library for simultaneous calculations
-Matplotlib: Visualization library used for plotting entropy distributions and other relevant data.
-NumPy: Fundamental package for numerical computations.
-Seaborn: Data visualization library that provides a high-level interface for drawing attractive statistical graphics.
-Enchant: Spellchecking library used to assemble the word dictionary.
-Wordfreq: Library to obtain word frequency information, aiding in the prioritization of common words.
+NLTK: Natural language processing library used for linguistic analysis and dictionary compilation. <br>
+Asyncio: Multithreading library for simultaneous processing. <br>
+Matplotlib: Visualization library used for plotting entropy distributions and other relevant data. <br>
+NumPy: Fundamental package for numerical computations. <br>
+Seaborn: Data visualization library that provides a high-level interface for drawing attractive statistical graphics. <br>
+Enchant: Spellchecking library used to assemble the word dictionary. <br>
+Wordfreq: Library to obtain word frequency information, aiding in the prioritization of common words. <br>

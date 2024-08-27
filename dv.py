@@ -75,11 +75,8 @@ class LiveBarChart(QMainWindow):
     @pyqtSlot(str, int)
     def process_results(self, guess, attempts):
         self.round_count += 1
-
-        # Update the UI in the main thread
         self.guess_display.append(f"Round {self.round_count}: {', '.join(guess)}")
 
-        # Update the frequencies
         if attempts > 6:
             self.frequencies[-1] += 1
         else:

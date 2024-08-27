@@ -18,7 +18,7 @@ async def simRound():
     targetWord = random.choice(five_letter_words).lower()
     gameState = True
     previousGuesses = []
-    matching_words = five_letter_words  # Initialize matching_words
+    matching_words = five_letter_words
 
     while gameState:
         attempts += 1

@@ -17,7 +17,6 @@ def findNextGuess(word_list):
     bestEntries = []
 
     if (len(word_list) == 1):
-        # print("Your best choice is: " + word_list[0] + " because there is only one option!")
         return [(word_list[0], float(1), float(getWordFrequency(word_list[0])))]
     else:
         for i, word in enumerate(word_list):
@@ -34,18 +33,14 @@ def findNextGuess(word_list):
                     entropy += probability * math.log2(1/probability)
             wordFreq = getWordFrequency(word)
             if (entropy >= maxEntropy):
-                # print("inserted "+str(entropy))
-                # print("inserted [" + ' '.join(map(str, bestWords)) + "] " + str(len(bestWords)))
                 if (word, entropy, float(wordFreq)) not in bestEntries:
                     bestEntries.append((word, entropy, float(wordFreq)))
                     bestEntries.sort(key=lambda x:x[1], reverse = True)
                     if (len(bestEntries) > 5):
                         bestEntries.pop(-1)
                     maxEntropy = bestEntries[-1][1]
-            # print(str(i)+" "+word+" "+str(entropy)+" "+str(wordFreq))
             entropy = 0
         bestEntries.sort(key=lambda x:x[2], reverse = True)
-        # print("Your best choices are:\n" + '\n'.join(map(str, bestEntries)))
         print("<------------------>")
         return bestEntries
 

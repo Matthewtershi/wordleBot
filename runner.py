@@ -46,6 +46,5 @@ while True:
         matching_words = [word for word in matching_words if word not in guessedWords]
         findNextGuess(matching_words)
     guessedWords.append(guess)
-    # print(targetWord)
 print("------------------")
 print("You solved this Wordle in " + str(attempts) + " tries!")
