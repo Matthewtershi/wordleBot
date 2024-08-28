@@ -70,5 +70,5 @@ async def main():
         sum += attempts
     print("avg: " + str(float(sum)/rounds))
 
-asyncio.run(main())
+# asyncio.run(main())
 
